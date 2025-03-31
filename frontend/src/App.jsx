@@ -8,6 +8,8 @@ import Staff from "./Pages/Staff";
 import UsefullLinks from "./Pages/UsefullLinks";
 import Inquiry from "./Pages/Inquiry";
 import Documents from "./Pages/Documents"
+import Ports from "./Pages/Ports";
+import Files from "./Pages/Files";
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
             <Route path="/staff" element={<Staff/>} />
             <Route path="/inquiry" element={<Inquiry/>} />
             <Route path="/documents" element={<Documents/>} />
+            <Route path="/ports" element={<Ports/>} />
+            <Route path="/files" element={<Files/>} />
           </Routes>
    
 

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaShip, FaPlane, FaBars, FaTimes, FaHome, FaLink, FaFileAlt, FaQuestionCircle, FaUsers, FaEnvelope } from "react-icons/fa";
+import { FaShip, FaPlane, FaBars, FaTimes, FaHome, FaLink, FaFileAlt, FaQuestionCircle, FaUsers, FaEnvelope, FaPlus } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
@@ -36,8 +37,6 @@ function Header() {
         <nav className="hidden md:flex items-center gap-6">
           {[
             { icon: FaHome, path: "/", label: "Home" },
-            { icon: FaLink, path: "/links", label: "Quick Links" },
-            { icon: FaFileAlt, path: "/documents", label: "Documents" },
             { icon: FaQuestionCircle, path: "/faq", label: "FAQ's" },
             { icon: FaUsers, path: "/staff", label: "Staff" },
             { icon: FaEnvelope, path: "/inquiry", label: "Contact Us" },
@@ -56,7 +55,41 @@ function Header() {
               )}
             </Link>
           ))}
+          {/* More Button */}
+          <button
+            onClick={() => setIsMoreOpen(!isMoreOpen)}
+            className="text-white p-2 rounded-full hover:bg-blue-600 transition-all duration-200"
+            aria-label="Toggle menu"
+          >
+            {isMoreOpen ? <FaTimes size={24} /> : <FaPlus size={24} />}
+          </button>
+
         </nav>
+        {
+          isMoreOpen && (
+            <div className="absolute top-20 right-4 bg-blue-500 border-2 border-blue-900 rounded-xl shadow-lg p-4 w-52">
+              <nav className="flex flex-col gap-2">
+                {[
+                  { icon: FaLink, path: "/links", label: "Quick Links" },
+                  { icon: FaFileAlt, path: "/documents", label: "Documents" },
+                  { icon: FaFileAlt, path: "/files", label: "Download Files" },
+                  { icon: FaFileAlt, path: "/ports", label: "Ports/ICD's/CFS" },
+                ].map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${isActive(item.path) ? "bg-blue-700 text-cyan-300 font-medium" : "hover:bg-blue-600 hover:text-white"
+                      }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <item.icon className="text-lg" /> {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          )
+        }
+
 
         {/* Mobile Menu Button */}
         <button
@@ -79,6 +112,8 @@ function Header() {
               { icon: FaQuestionCircle, path: "/faq", label: "FAQ's" },
               { icon: FaUsers, path: "/staff", label: "Staff" },
               { icon: FaEnvelope, path: "/inquiry", label: "Contact Us" },
+              { icon: FaFileAlt, path: "/files", label: "Download Files" },
+              { icon: FaFileAlt, path: "/ports", label: "Ports/ICD's/CFS" },
             ].map((item) => (
               <Link
                 key={item.path}
