@@ -67,7 +67,7 @@ function Header() {
         </nav>
         {
           isMoreOpen && (
-            <div className="absolute top-20 right-4 bg-blue-500 border-2 border-blue-900 rounded-xl shadow-lg p-4 w-52">
+            <div className="z-50 absolute top-20 right-4 bg-blue-500 border-2 border-blue-900 rounded-xl shadow-lg p-4 w-52">
               <nav className="flex flex-col gap-2">
                 {[
                   { icon: FaLink, path: "/links", label: "Quick Links" },
