@@ -56,7 +56,7 @@ function Staff() {
         {
           name: "Deepak Kumar",
           position: "G CARD",
-        //   phone: "+91 6283130835",
+          phone: "+91 01615190327",
           pic: "/abhinav.jpg",
         },
         {
@@ -86,19 +86,19 @@ function Staff() {
         {
           name: "Harwinder Singh",
           position: "H CARD",
-          phone: "",
+          phone: "01615190327",
           pic: "/abhinav.jpg",
         },
         {
           name: "Avnish Yadav",
           position: "H CARD",
-          phone: "",
+          phone: "01615190327",
           pic: "/abhinav.jpg",
         },
         {
           name: "Akash Kumar",
           position: "H CARD",
-          phone: "",
+          phone: "01615190327",
           pic: "/abhinav.jpg",
         },
         

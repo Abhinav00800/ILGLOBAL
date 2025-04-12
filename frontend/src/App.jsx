@@ -10,6 +10,12 @@ import Inquiry from "./Pages/Inquiry";
 import Documents from "./Pages/Documents"
 import Ports from "./Pages/Ports";
 import Files from "./Pages/Files";
+import Jobregister from "./Pages/Jobregister";
+import FindJob from "./Pages/Findjob";
+import Findjobbynumber from "./Pages/Findjobbynumber";
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
+import JobregisterByexcel from "./Pages/JobregisterByexcel";
 
 
 function App() {
@@ -27,6 +33,12 @@ function App() {
             <Route path="/documents" element={<Documents/>} />
             <Route path="/ports" element={<Ports/>} />
             <Route path="/files" element={<Files/>} />
+            <Route path="/jobregister" element={<Jobregister/>} />
+            <Route path="/findjob" element={<FindJob/>} />
+            <Route path="/findjobbynumber" element={<Findjobbynumber/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/jobregisterbyexcel" element={<JobregisterByexcel/>} />
+            {/* <Route path="/signup" element={<Signup/>} /> */}
           </Routes>
    
 

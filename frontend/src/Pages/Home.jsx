@@ -137,7 +137,7 @@ function Home() {
             <div className="relative max-w-xs md:max-w-sm lg:max-w-md w-full mx-auto">
                 <img
                     src="sanjeev.jpg"
-                    alt="Sanjeev Kumar, Managing Director"
+                    alt="Sanjeev Sharma, Managing Director"
                     className="rounded-2xl shadow-xl w-full h-auto object-cover"
                 />
                 <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-lg shadow-lg">
@@ -159,7 +159,7 @@ function Home() {
                     <h2 className="text-blue-600 font-bold mb-1 uppercase tracking-wider text-sm">
                         About Our Leadership
                     </h2>
-                    <h3 className="text-4xl font-bold text-gray-900 mb-6">Sanjeev Kumar</h3>
+                    <h3 className="text-4xl font-bold text-gray-900 mb-6">Sanjeev Sharma</h3>
                     <p className="text-xl font-semibold text-blue-800 mb-2">
                         Managing Director, IL GLOBAL SHIPPING
                     </p>

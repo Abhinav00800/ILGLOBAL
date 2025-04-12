@@ -69,7 +69,7 @@ function Ports() {
         <h1 className="text-4xl font-bold text-blue-900 mb-4">
           Clearance Ports/ICD's/CFS in Ludhiana
         </h1>
-        <p className="text-blue-700 max-w-2xl mx-auto">
+        <p className="text-gray-700 max-w-2xl mx-auto">
           Explore the major Clearance Ports/ICD's/CFS in Ludhiana in Ludhiana.
         </p>
       </div>

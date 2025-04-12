@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaShip, FaPlane, FaBars, FaTimes, FaHome, FaLink, FaFileAlt, FaQuestionCircle, FaUsers, FaEnvelope, FaPlus } from "react-icons/fa";
+import { FaShip, FaPlane, FaBars, FaTimes, FaHome, FaLink, FaFileAlt, FaQuestionCircle, FaUsers, FaEnvelope, FaPlus, FaUserPlus } from "react-icons/fa";
+import { FaRightToBracket } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
@@ -27,7 +30,7 @@ function Header() {
             />
           </div>
           <Link to="/" className="text-2xl font-bold tracking-wide">
-            <span className="bg-gradient-to-r from-cyan-300 to-sky-300 bg-clip-text text-transparent">
+            <span className=" bg-clip-text text-white">
               IL GLOBAL SHIPPING
             </span>
           </Link>
@@ -35,60 +38,186 @@ function Header() {
 
         {/* Navigation Links - Desktop */}
         <nav className="hidden md:flex items-center gap-6">
-          {[
-            { icon: FaHome, path: "/", label: "Home" },
-            { icon: FaQuestionCircle, path: "/faq", label: "FAQ's" },
-            { icon: FaUsers, path: "/staff", label: "Staff" },
-            { icon: FaEnvelope, path: "/inquiry", label: "Contact Us" },
-          ].map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`relative px-3 py-2 rounded-4xl transition duration-300 hover:bg-blue-200 hover:text-blue-900 hover:bg-opacity-10 ${isActive(item.path) ? "font-medium" : ""
-                }`}
-            >
-              <div className="flex justify-center items-center gap-1">
-                <item.icon className="text-lg" /> {item.label}
-              </div>
-              {isActive(item.path) && (
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-300 rounded-full"></span>
-              )}
-            </Link>
-          ))}
-          {/* More Button */}
-          <button
-            onClick={() => setIsMoreOpen(!isMoreOpen)}
-            className="text-white p-2 rounded-full hover:bg-blue-600 transition-all duration-200"
-            aria-label="Toggle menu"
+          <div className="flex text-center justify-center items-center gap-0.5 text-md font-medium cursor-pointer hover:text-cyan-300">
+            {/* <FaHome /> */}
+            <Link to="/">Home </Link>
+          </div>
+
+
+              {/* Resources  */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsResourcesOpen(true)}
+            onMouseLeave={() => setIsResourcesOpen(false)}
           >
-            {isMoreOpen ? <FaTimes size={24} /> : <FaPlus size={24} />}
+            <button className="flex items-center font-medium cursor-pointer hover:text-cyan-300">
+              Resources
+              <svg className="w-3 h-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.65a.75.75 0 01-1.08 0l-4.25-4.65a.75.75 0 01.02-1.06z" />
+              </svg>
+            </button>
+
+            {/* Dropdown menu */}
+            {isResourcesOpen && (
+              <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="absolute mt-0 w-64 bg-white text-gray-800 rounded-lg shadow-xl z-50 "
+            >
+              <ul className="py-2">
+                {[
+                    {
+                      name: "Quick Links", path: "/links", icon:FaLink
+                    },
+                    {
+                      name: "Documents", path: "/documents", icon:FaFileAlt
+                    },
+                    {
+                      name: "Downloads", path: "/files", icon:FaFileAlt
+                    },
+                    {
+                      name: "Ports/ICDs/CFS", path: "/ports", icon:FaFileAlt
+                    },
+                  ].map((item, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-1 rounded-2xl  hover:bg-blue-100 hover:text-blue-900 transition duration-150 cursor-pointer"
+                  >
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 "
+                        }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                    {/* <item.icon className="text-lg right-0"/> */}
+                     {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+            )}
+          </div>
+
+          {/* Service */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsServicesOpen(true)}
+            onMouseLeave={() => setIsServicesOpen(false)}
+          >
+            <button className="flex items-center font-medium cursor-pointer hover:text-cyan-300">
+              Services
+              <svg className="w-3 h-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.65a.75.75 0 01-1.08 0l-4.25-4.65a.75.75 0 01.02-1.06z" />
+              </svg>
+            </button>
+
+            {/* Dropdown menu */}
+            {isServicesOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute mt-0 w-64 bg-white text-gray-800 rounded-lg shadow-xl z-50 "
+              >
+                <ul className="py-2">
+                  {[
+                    {
+                      name: "Search Container",path:"/findjobbynumber", icon:FaLink
+                    },
+                    {
+                      name: "Job Register (upload excel)",path:"/jobregisterbyexcel", icon:FaFileAlt
+                    },
+                    {
+                      name: "Job Register (add manually)",path:"/jobregister", icon:FaFileAlt
+                    },
+                    {
+                      name: "Container Details",path:"/findjob", icon:FaFileAlt
+                    },
+                  ].map((item, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-1 rounded-2xl  hover:bg-blue-100 hover:text-blue-900 transition duration-150 cursor-pointer"
+                    >
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className={`flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 "
+                          }`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                      {/* <item.icon className="text-lg right-0"/> */}
+                       {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </div>
+
+          {/* About us */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsAboutOpen(true)}
+            onMouseLeave={() => setIsAboutOpen(false)}
+          >
+            <button className="flex items-center font-medium cursor-pointer hover:text-cyan-300">
+              About Us
+              <svg className="w-3 h-3 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.65a.75.75 0 01-1.08 0l-4.25-4.65a.75.75 0 01.02-1.06z" />
+              </svg>
+            </button>
+
+            {/* Dropdown menu */}
+            {isAboutOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute mt-0 w-64 bg-white text-gray-800 rounded-lg shadow-xl z-50 "
+              >
+                <ul className="py-2">
+                  {[
+                    {
+                      name: "Company's Info",path:"/findjobbynumber", icon:FaLink
+                    },
+                    {
+                      name: "Our Staff",path:"/staff", icon:FaFileAlt
+                    },
+                    {
+                      name: "FAQs",path:"/faq", icon:FaFileAlt
+                    },
+                  ].map((item, index) => (
+                    <li
+                      key={index}
+                      className="px-4 py-1 rounded-2xl  hover:bg-blue-100 hover:text-blue-900 transition duration-150 cursor-pointer"
+                    >
+                      <Link
+                        key={item.path}
+                        to={item.path}
+                        className={`flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 "
+                          }`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                      {/* <item.icon className="text-lg right-0"/> */}
+                       {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </div>
+          <button className="flex items-center gap-0.5 ml-12 p-1 border-2 rounded-2xl bg-yellow-500 font-medium cursor-pointer ">
+            {/* <FaHome /> */}  
+            <Link to="/inquiry">Contact US </Link>
           </button>
 
         </nav>
-        {
-          isMoreOpen && (
-            <div className="z-50 absolute top-20 right-4 bg-blue-500 border-2 border-blue-900 rounded-xl shadow-lg p-4 w-52">
-              <nav className="flex flex-col gap-2">
-                {[
-                  { icon: FaLink, path: "/links", label: "Quick Links" },
-                  { icon: FaFileAlt, path: "/documents", label: "Documents" },
-                  { icon: FaFileAlt, path: "/files", label: "Download Files" },
-                  { icon: FaFileAlt, path: "/ports", label: "Ports/ICD's/CFS" },
-                ].map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${isActive(item.path) ? "bg-blue-700 text-cyan-300 font-medium" : "hover:bg-blue-600 hover:text-white"
-                      }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <item.icon className="text-lg" /> {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          )
-        }
+        
 
 
         {/* Mobile Menu Button */}
@@ -114,6 +243,9 @@ function Header() {
               { icon: FaEnvelope, path: "/inquiry", label: "Contact Us" },
               { icon: FaFileAlt, path: "/files", label: "Download Files" },
               { icon: FaFileAlt, path: "/ports", label: "Ports/ICD's/CFS" },
+              { icon: FaFileAlt, path: "/jobregister", label: "Job register" },
+              { icon: FaFileAlt, path: "/findjobbynumber", label: "Search container" },
+              { icon: FaFileAlt, path: "/findjob", label: "Admin search container" },
             ].map((item) => (
               <Link
                 key={item.path}
@@ -127,8 +259,12 @@ function Header() {
               </Link>
             ))}
           </nav>
+
         </div>
+
       )}
+
+
     </header>
   );
 }
