@@ -16,7 +16,7 @@ import Findjobbynumber from "./Pages/Findjobbynumber";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import JobregisterByexcel from "./Pages/JobregisterByexcel";
-
+import AboutUS from "./Pages/AboutUS";
 
 function App() {
   return (
@@ -24,25 +24,25 @@ function App() {
       <Router>
         <Header />
 
+        
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/faq" element={<FAQTestimonials/>} />
-            <Route path="/links" element={<UsefullLinks/>} />
-            <Route path="/staff" element={<Staff/>} />
-            <Route path="/inquiry" element={<Inquiry/>} />
-            <Route path="/documents" element={<Documents/>} />
-            <Route path="/ports" element={<Ports/>} />
-            <Route path="/files" element={<Files/>} />
-            <Route path="/jobregister" element={<Jobregister/>} />
-            <Route path="/findjob" element={<FindJob/>} />
-            <Route path="/findjobbynumber" element={<Findjobbynumber/>} />
-            <Route path="/login" element={<Login/>} />
-            <Route path="/jobregisterbyexcel" element={<JobregisterByexcel/>} />
+            <Route path="/faq" element={<FAQTestimonials />} />
+            <Route path="/links" element={<UsefullLinks />} />
+            <Route path="/staff" element={<Staff />} />
+            <Route path="/inquiry" element={<Inquiry />} />
+            <Route path="/documents" element={<Documents />} />
+            <Route path="/ports" element={<Ports />} />
+            <Route path="/files" element={<Files />} />
+            <Route path="/jobregister" element={<Jobregister />} />
+            <Route path="/findjob" element={<FindJob />} />
+            <Route path="/findjobbynumber" element={<Findjobbynumber />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/jobregisterbyexcel" element={<JobregisterByexcel />} />
+            <Route path="/aboutus" element={<AboutUS />} />
             {/* <Route path="/signup" element={<Signup/>} /> */}
           </Routes>
-   
-
-        <Footer />
+      <Footer />
       </Router>
     </div>
   );

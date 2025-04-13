@@ -75,11 +75,11 @@ function Home() {
                     </svg>
                 </div>
 
-                <div className="container mx-auto px-6 py-20 relative z-10">
+                <div className="container mx-auto px-6 py-20 relative">
                     {/* Main Flex Container (Fixed) */}
                     <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
                         {/* Left Text Section */}
-                        <div className="lg:w-1/2 text-white">
+                        <div className="lg:w-1/2 text-white -z-0">
                             <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-4">
                             Your Trusted Partner in Hassle-Free Customs Clearance.
                             </h1>
