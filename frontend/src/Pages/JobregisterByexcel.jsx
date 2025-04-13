@@ -42,6 +42,7 @@ function JobregisterByexcel() {
     setShowConfirmation(true);
   };
 
+  axios.defaults.withCredentials= true;
   const confirmUpload = async () => {
     setIsLoading(true);
     setShowConfirmation(false);

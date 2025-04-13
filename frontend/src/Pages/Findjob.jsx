@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaEye } from "react-icons/fa";
 import * as XLSX from "xlsx";
+import axios from 'axios';
 
 export default function FindJob() {
     // State for storing job data
@@ -28,23 +29,22 @@ export default function FindJob() {
         direction: "ascending"
     });
     const navigate = useNavigate();
+    axios.defaults.withCredentials= true;
     // Fetch data from the API
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/jobregister/fetchjobregisterdata`);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/jobregister/fetchjobregisterdata`
+                );
 
-                const data = await response.json();
-                setJobData(data.data);
-                setFilteredData(data.data);
-                setLoading(false);
+                setJobData(response.data.data);
+                setFilteredData(response.data.data);
             } catch (err) {
                 setError(`Failed to fetch data: ${err.message}`);
+            } finally {
                 setLoading(false);
             }
         };
@@ -162,7 +162,7 @@ export default function FindJob() {
     const HandleView = (shipping_bill_number) => {
         setViewjob(true);
     }
-    
+
 
     return (
         <div className="text-center bg-blue-50">
@@ -414,7 +414,7 @@ export default function FindJob() {
                                     <p className="text-gray-600">This is a simple pop-up content.</p>
                                     <button
                                         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                                        onClick={()=> setViewjob(false)}
+                                        onClick={() => setViewjob(false)}
                                     >
                                         Close
                                     </button>

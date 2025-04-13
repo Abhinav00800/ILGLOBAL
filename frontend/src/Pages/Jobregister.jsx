@@ -3,6 +3,7 @@ import { data, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import axios from 'axios';
 
 export default function JobRegister() {
     const location = useLocation();
@@ -54,31 +55,43 @@ export default function JobRegister() {
             [name]: value
         }));
     };
+    axios.defaults.withCredentials= true;
 
     useEffect(() => {
         console.log(location.state);
+    
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_URL}/jobregister/fetchdatabyshippingno/${location.state.shipping_bill_number}`
+                );
+                setFormData(response.data.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+    
         if (location.state) {
-            fetch(`${import.meta.env.VITE_API_URL}/jobregister/fetchdatabyshippingno/${location.state.shipping_bill_number}`)
-                .then((response) => response.json())
-                .then((json) => setFormData(json.data))
-                .catch((error) => console.error("Error fetching data:", error));
+            fetchData();
         }
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/jobregister/uploadjobregisterdata`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            console.log("Response:", data);
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/jobregister/uploadjobregisterdata`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            console.log("Response:", response.data);
             toast.success("Success! Data saved.");
         } catch (error) {
+            console.error("Error:", error);
             toast.error("Oops! Something went wrong.");
         }
     };

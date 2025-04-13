@@ -9,36 +9,37 @@ function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    try {
-      if (!formData?.email || !formData?.password) {
-        alert("Please fill in all fields");
-        return;
-      }
-  
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/login/`, {
-        method: "POST",
+  axios.defaults.withCredentials= true;
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    if (!formData?.email || !formData?.password) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/login/`,
+      formData,
+      {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
-      });
-  
-      const data = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
       }
-  
-      console.log("Response:", data);
-      alert("Login successful");
-    } catch (error) {
-      console.error("Error:", error);
-      alert(error.message || "Error in Login");
-    }
-  };
+    );
+
+    console.log("Response:", response.data);
+    alert("Login successful");
+  } catch (error) {
+    console.error("Error:", error);
+    const message =
+      error.response?.data?.message || error.message || "Error in Login";
+    alert(message);
+  }
+};
+
   
 
   return (

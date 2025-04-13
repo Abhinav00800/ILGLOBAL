@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 function Signup() {
     const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -9,24 +10,31 @@ function Signup() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/signup/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            const data = await response.json();
-            console.log("Response:", data);
-            alert("Signup successfull");
-        } catch (error) {
-            console.log(error);
-            alert("Error in signup");
-        }
-    };
+    axios.defaults.withCredentials= true;
+
+   const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/signup/`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("Response:", response.data);
+    alert("Signup successful");
+  } catch (error) {
+    console.error("Error:", error);
+    const message =
+      error.response?.data?.message || error.message || "Error in signup";
+    alert(message);
+  }
+};
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-blue-50">

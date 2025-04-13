@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import axios from 'axios';
 
 export default function Findjobbynumber() {
   const [query, setQuery] = useState("");
@@ -11,27 +12,28 @@ export default function Findjobbynumber() {
   const [error, setError] = useState(null);
   const location = useLocation();
 
-  const handleSearch = () => {
+  axios.defaults.withCredentials= true;
+  const handleSearch = async () => {
     setLoading(true);
     setError(null);
     setResult(null);
-
-    fetch(`${import.meta.env.VITE_API_URL}/jobregister/fetchdatabyshippingno/${query}`)
-      .then((response) => {
-        if (!response.ok) {
-          toast.error("Enter correct Shipping Bill Number");
-        }
-        return response.json();
-      })
-      .then((json) => {
-        setResult(json.data || null);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+  
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/jobregister/fetchdatabyshippingno/${query}`
+      );
+  
+      setResult(response.data?.data || null);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      if (error.response && error.response.status === 404) {
+        toast.error("Enter correct Shipping Bill Number");
+      } else {
         setError("Error fetching data. Please try again.");
-        setLoading(false);
-      });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
