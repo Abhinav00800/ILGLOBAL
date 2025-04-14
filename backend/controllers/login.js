@@ -25,11 +25,11 @@ const LoginController= async (req, res) => {
         sameSite: "Strict",
         maxAge: 3600000, // 1 hour
       });
-  
+      const role=user.role;
       // Send token in response header
       res.header("Authorization", `Bearer ${token}`);
   
-      res.status(200).json({ message: "Login successful", token });
+      res.status(200).json({ message: "Login successful", role });
     } catch (error) {
       res.status(500).json({ error: "Login failed", details: error.message });
     }

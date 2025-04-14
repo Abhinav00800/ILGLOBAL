@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaShip, FaPlane,FaHandshake,FaBars, FaTimes, FaHome, FaLink, FaFileAlt, FaQuestionCircle, FaUsers, FaEnvelope } from "react-icons/fa";
-import { 
-  FaDownload, FaMapMarkerAlt, FaSearch, FaInfoCircle, FaUserPlus, FaUpload } from "react-icons/fa";
+import { FaShip, FaPlane,FaSignInAlt, FaHandshake, FaBars, FaTimes, FaHome, FaLink, FaFileAlt, FaQuestionCircle, FaUsers, FaEnvelope } from "react-icons/fa";
+import {
+  FaDownload, FaMapMarkerAlt, FaSearch, FaInfoCircle, FaUserPlus, FaUpload
+} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Header() {
@@ -12,6 +13,8 @@ function Header() {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const location = useLocation();
+
+  const role = localStorage.getItem("role");
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -31,7 +34,7 @@ function Header() {
 
     document.addEventListener('mousedown', handleClickOutside);
     window.addEventListener('resize', handleResize);
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       window.addEventListener('resize', handleResize);
@@ -44,7 +47,7 @@ function Header() {
   }, [location]);
 
   const isActive = (path) => location.pathname === path;
-  
+
   // Mobile menu items grouped by category
   const mobileMenuItems = {
     main: [
@@ -59,14 +62,15 @@ function Header() {
     ],
     services: [
       { icon: FaSearch, path: "/findjobbynumber", label: "Search Container" },
-      { icon: FaUpload, path: "/jobregisterbyexcel", label: "Job Register (Excel)" },
-      { icon: FaUserPlus, path: "/jobregister", label: "Job Register (Manual)" },
-      { icon: FaInfoCircle, path: "/findjob", label: "Container Details" },
+      ...(role === "admin" ? [{ icon: FaUpload, path: "/jobregisterbyexcel", label: "Job Register (Excel)" }] : []),
+      ...(role === "admin" ? [{ icon: FaUserPlus, path: "/jobregister", label: "Job Register (Manual)" }] : []),
+      ...(role === "admin" ? [{ icon: FaInfoCircle, path: "/findjob", label: "Container Details" }] : []),
     ],
     about: [
       { icon: FaHandshake, path: "/aboutus", label: "Reach US" },
       { icon: FaUsers, path: "/staff", label: "Our Staff" },
       { icon: FaQuestionCircle, path: "/faq", label: "FAQs" },
+      { icon: FaSignInAlt, path: "/login", label: "Login/Logout" },
     ]
   };
 
@@ -218,9 +222,9 @@ function Header() {
               </motion.div>
             )}
           </div>
-          
-          <Link 
-            to="/inquiry" 
+
+          <Link
+            to="/inquiry"
             className="flex items-center gap-0.5 ml-6 px-4 py-2 border-2 rounded-full bg-yellow-500 text-blue-950 font-medium cursor-pointer hover:bg-yellow-400 transition duration-200"
           >
             Contact Us
@@ -240,7 +244,7 @@ function Header() {
       {/* Mobile Menu Dropdown - Improved */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -250,13 +254,13 @@ function Header() {
             <div className="p-4">
               {/* Search bar for mobile */}
               <div className="mb-6 mt-2">
-                <input 
-                  type="text" 
-                  placeholder="Search..." 
+                <input
+                  type="text"
+                  placeholder="Search..."
                   className="w-full px-4 py-2 rounded-full bg-blue-900 text-white border border-blue-800 focus:outline-none focus:ring-2 focus:ring-cyan-300"
                 />
               </div>
-              
+
               {/* Contact button for mobile - prominent placement */}
               <Link
                 to="/inquiry"
@@ -265,7 +269,7 @@ function Header() {
               >
                 Contact Us
               </Link>
-              
+
               {/* Main navigation links */}
               <div className="mb-6">
                 <h3 className="text-cyan-400 text-sm font-semibold uppercase tracking-wider mb-2">Main</h3>
@@ -274,11 +278,10 @@ function Header() {
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`py-3 px-4 flex items-center gap-2 rounded-lg ${
-                        isActive(item.path) 
-                          ? "bg-blue-800 text-cyan-300" 
+                      className={`py-3 px-4 flex items-center gap-2 rounded-lg ${isActive(item.path)
+                          ? "bg-blue-800 text-cyan-300"
                           : "bg-blue-900 hover:bg-blue-800"
-                      }`}
+                        }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <item.icon /> {item.label}
@@ -286,7 +289,7 @@ function Header() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Collapsible sections */}
               {[
                 { title: "Resources", items: mobileMenuItems.resources },
@@ -300,11 +303,10 @@ function Header() {
                       <Link
                         key={item.path}
                         to={item.path}
-                        className={`py-3 px-4 flex items-center gap-2 rounded-lg ${
-                          isActive(item.path) 
-                            ? "bg-blue-800 text-cyan-300" 
+                        className={`py-3 px-4 flex items-center gap-2 rounded-lg ${isActive(item.path)
+                            ? "bg-blue-800 text-cyan-300"
                             : "bg-blue-900 hover:bg-blue-800"
-                        }`}
+                          }`}
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <item.icon /> {item.label}
@@ -313,7 +315,7 @@ function Header() {
                   </div>
                 </div>
               ))}
-              
+
               {/* Footer in mobile menu */}
               <div className="mt-8 pt-4 border-t border-blue-800 text-center text-sm text-blue-400">
                 <p>© 2025 IL Global Shipping</p>

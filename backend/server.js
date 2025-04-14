@@ -13,12 +13,7 @@ const signUpRoutes= require("./routes/signup.js")
 const {authenticate}=require('./middleware/authentication.js')
 
 // Middleware
-const allowedOrigins = [
-    "https://www.ilgshipping.com",
-    "http://localhost:5173"             
-  ];
-  
-app.use(cors({origin:process.env.Origin, credentials: true}));
+app.use(cors({origin:process.env.ORIGINS, credentials: true}));
 app.use(express.json());
 app.use(cookieParser());
 
@@ -35,8 +30,8 @@ app.post("/logout", (req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "Logged out successfully" });
 });
-// app.use("/jobregister",authenticate,jobRegisterRoutes);
-app.use("/jobregister",jobRegisterRoutes);
+app.use("/jobregister",authenticate,jobRegisterRoutes);
+// app.use("/jobregister",jobRegisterRoutes);
 
 // Start Server
 app.listen(PORT, () => {
