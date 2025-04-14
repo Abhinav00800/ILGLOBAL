@@ -30,7 +30,7 @@ app.post("/logout", (req, res) => {
     res.clearCookie("token");
     res.status(200).json({ message: "Logged out successfully" });
 });
-app.use("/jobregister",authenticate,jobRegisterRoutes);
+app.use("/jobregister",jobRegisterRoutes);
 // app.use("/jobregister",jobRegisterRoutes);
 
 // Start Server
