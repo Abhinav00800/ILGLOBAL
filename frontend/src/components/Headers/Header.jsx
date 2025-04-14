@@ -68,7 +68,7 @@ function Header() {
     ],
     about: [
       { icon: FaHandshake, path: "/aboutus", label: "Reach US" },
-      { icon: FaUsers, path: "/staff", label: "Our Staff" },
+      ...(role === "admin" ? [{ icon: FaUsers, path: "/staff", label: "Our Staff" }] : []),
       { icon: FaQuestionCircle, path: "/faq", label: "FAQs" },
       { icon: FaSignInAlt, path: "/login", label: "Login/Logout" },
     ]
