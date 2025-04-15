@@ -33,12 +33,58 @@ const FetchJobByShippingNo = async (req, res) => {
     }
 };
 
+const fieldMapping = {
+    "Exporter name:": "exporter_name",
+    "Inv. No.": "invoice_number",
+    "Date": "date",
+    "S.Bill no.": "shipping_bill_number",
+    "PORT OF Dest.": "port_of_destination",
+    "FOB Value": "fob_value",
+    "Cont no.": "container_number",
+    "Size": "size",
+    "custom seal": "custom_seal",
+    "H/OVER": "h_over",
+    "Scheme": "scheme",
+    "DBK&DEPB AMOUNT": "dbk_depb",
+    "LOCATION": "location",
+    "Current  Status": "current_status",
+    "Scroll no. & date": "scroll_date",
+    "No of Pkgs": "no_of_pakages",
+    "NET WT.": "net_weight",
+    "Gross weight.": "gross_weight",
+    "Forwarding date": "forwarding_date",
+    "rail out date": "rail_out_date",
+    "EDI Job": "edi_job",
+    "LEO date": "leo_date",
+    "Mundra Arrival date": "mundra_arrival_date",
+    "Remarks": "remarks",
+    // second "Date" column in frontend
+    "Date2": "date2"
+};
+
+const dateFields = [
+    "date", "date2", "h_over", "forwarding_date", "rail_out_date", "leo_date", "mundra_arrival_date"
+];
+
+const numberFields = [
+    "fob_value", "size", "scheme", "dbk_depb", "no_of_pakages",
+    "net_weight", "gross_weight", "edi_job", "shipping_bill_number"
+];
+
+const sanitizeDate = (val) => {
+    const parsed = new Date(val);
+    return isNaN(parsed.getTime()) ? null : parsed;
+};
+
+const sanitizeNumber = (val) => {
+    const num = parseFloat(val);
+    return isNaN(num) ? null : num;
+};
 
 const UploadJobRegisterData = async (req, res) => {
     try {
         let jobArray = req.body;
 
-        // Normalize to array if it's a single object
         if (!Array.isArray(jobArray)) {
             jobArray = [jobArray];
         }
@@ -46,13 +92,29 @@ const UploadJobRegisterData = async (req, res) => {
         const results = [];
 
         for (const jobItem of jobArray) {
-            const { shipping_bill_number, ...jobData } = jobItem;
+            const mappedJob = {};
+
+            for (const [key, value] of Object.entries(jobItem)) {
+                if (!fieldMapping[key]) continue;
+
+                const fieldName = fieldMapping[key];
+
+                if (dateFields.includes(fieldName)) {
+                    mappedJob[fieldName] = sanitizeDate(value);
+                } else if (numberFields.includes(fieldName)) {
+                    mappedJob[fieldName] = sanitizeNumber(value);
+                } else {
+                    mappedJob[fieldName] = value;
+                }
+            }
+
+            const shipping_bill_number = mappedJob["shipping_bill_number"];
 
             if (!shipping_bill_number) {
                 results.push({
                     status: "error",
                     message: "Missing shipping_bill_number",
-                    job: jobItem
+                    job: jobItem,
                 });
                 continue;
             }
@@ -60,16 +122,14 @@ const UploadJobRegisterData = async (req, res) => {
             let job = await JobRegister.findOne({ shipping_bill_number });
 
             if (job) {
-                // Update existing job
                 job = await JobRegister.findOneAndUpdate(
                     { shipping_bill_number },
-                    { $set: jobData },
+                    { $set: mappedJob },
                     { new: true, upsert: true }
                 );
                 results.push({ status: "updated", job });
             } else {
-                // Create new job
-                const newJob = new JobRegister({ shipping_bill_number, ...jobData });
+                const newJob = new JobRegister(mappedJob);
                 const savedJob = await newJob.save();
                 results.push({ status: "created", job: savedJob });
             }
@@ -80,6 +140,7 @@ const UploadJobRegisterData = async (req, res) => {
             results,
         });
     } catch (error) {
+        console.error("UploadJobRegisterData Error:", error);
         return res.status(500).json({
             error: "Error processing job register data",
             details: error.message,
