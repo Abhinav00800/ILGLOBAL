@@ -34,7 +34,7 @@ const FetchJobByShippingNo = async (req, res) => {
 };
 
 const fieldMapping = {
-    "Exporter name:": "exporter_name",
+    "Exporter name": "exporter_name",
     "Inv. No.": "invoice_number",
     "Date": "date",
     "S.Bill no.": "shipping_bill_number",
@@ -47,8 +47,8 @@ const fieldMapping = {
     "Scheme": "scheme",
     "DBK&DEPB AMOUNT": "dbk_depb",
     "LOCATION": "location",
-    "Current  Status": "current_status",
-    "Scroll no. & date": "scroll_date",
+    "Current ↵Status": "current_status",
+    "Scroll ↵no. & date": "scroll_date",
     "No of Pkgs": "no_of_pakages",
     "NET WT.": "net_weight",
     "Gross weight.": "gross_weight",
@@ -56,7 +56,7 @@ const fieldMapping = {
     "rail out date": "rail_out_date",
     "EDI Job": "edi_job",
     "LEO date": "leo_date",
-    "Mundra Arrival date": "mundra_arrival_date",
+    "Port arrival date ": "mundra_arrival_date",
     "Remarks": "remarks",
     // second "Date" column in frontend
     "Date2": "date2"
@@ -72,9 +72,29 @@ const numberFields = [
 ];
 
 const sanitizeDate = (val) => {
-    const parsed = new Date(val);
-    return isNaN(parsed.getTime()) ? null : parsed;
+    if (!val) return null;
+
+    // Convert to string in case it's a number
+    const strVal = String(val).trim();
+
+    // Match DD.MM.YYYY
+    const dateParts = strVal.split(".");
+    if (dateParts.length !== 3) return null;
+
+    const [day, month, year] = dateParts.map(part => parseInt(part, 10));
+    if (
+        isNaN(day) || isNaN(month) || isNaN(year) ||
+        day < 1 || day > 31 ||
+        month < 1 || month > 12 ||
+        year < 1000 || year > 9999
+    ) {
+        return null;
+    }
+
+    // JS months are 0-indexed
+    return new Date(year, month - 1, day);
 };
+
 
 const sanitizeNumber = (val) => {
     const num = parseFloat(val);

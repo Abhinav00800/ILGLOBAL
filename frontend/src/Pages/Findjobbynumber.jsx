@@ -15,12 +15,14 @@ export default function FindJobByNumber() {
 
   axios.defaults.withCredentials = true;
   
+  const justDate = (isoDate) => new Date(isoDate).toISOString().split("T")[0];
+
   const handleSearch = async () => {
     if (!query.trim()) {
       toast.warning("Please enter a Shipping Bill Number");
       return;
     }
-    
+  
     setLoading(true);
     setError(null);
     setResult(null);
@@ -30,9 +32,20 @@ export default function FindJobByNumber() {
         `${import.meta.env.VITE_API_URL}/jobregister/fetchdatabyshippingno/${query}`
       );
   
-      setResult(response.data?.data || null);
-      
-      if (!response.data?.data) {
+      let data = response.data?.data || null;
+  
+      if (data) {
+        // Convert all date-like fields using justDate
+        Object.keys(data).forEach((key) => {
+          if (typeof data[key] === "string" && /^\d{4}-\d{2}-\d{2}T/.test(data[key])) {
+            data[key] = justDate(data[key]);
+          }
+        });
+      }
+  
+      setResult(data);
+  
+      if (!data) {
         toast.info("No records found for this shipping bill number");
       }
     } catch (error) {
@@ -46,6 +59,7 @@ export default function FindJobByNumber() {
       setLoading(false);
     }
   };
+  
 
   const handlePrint = () => {
     window.print();
@@ -134,19 +148,19 @@ export default function FindJobByNumber() {
                 <div className="space-y-2">
                   <div className="flex justify-between border-b border-blue-100 pb-1">
                     <span className="font-medium text-gray-700">Invoice Number:</span>
-                    <span className="text-gray-900">{result.invoice_number || "N/A"}</span>
+                    <span className="text-gray-900">{result.invoice_number || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-blue-100 pb-1">
                     <span className="font-medium text-gray-700">Date:</span>
-                    <span className="text-gray-900">{result.date || "N/A"}</span>
+                    <span className="text-gray-900">{result.date || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-blue-100 pb-1">
                     <span className="font-medium text-gray-700">Shipping Bill No:</span>
-                    <span className="text-gray-900 font-semibold">{result.shipping_bill_number || "N/A"}</span>
+                    <span className="text-gray-900 font-semibold">{result.shipping_bill_number || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-blue-100 pb-1">
                     <span className="font-medium text-gray-700">FOB Value:</span>
-                    <span className="text-gray-900">{result.fob_value || "N/A"}</span>
+                    <span className="text-gray-900">{result.fob_value || "Expected Soon"}</span>
                   </div>
                 </div>
               </div>
@@ -156,19 +170,40 @@ export default function FindJobByNumber() {
                 <div className="space-y-2">
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">Container Number:</span>
-                    <span className="text-gray-900">{result.container_number || "N/A"}</span>
+                    <span className="text-gray-900">{result.container_number || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">Size:</span>
-                    <span className="text-gray-900">{result.size || "N/A"}</span>
+                    <span className="text-gray-900">{result.size || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">Custom Seal:</span>
-                    <span className="text-gray-900">{result.custom_seal || "N/A"}</span>
+                    <span className="text-gray-900">{result.custom_seal || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">H Over:</span>
-                    <span className="text-gray-900">{result.h_over || "N/A"}</span>
+                    <span className="text-gray-900">{result.h_over || "Expected Soon"}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-red-50 rounded-md p-4">
+                <h3 className="text-lg font-semibold text-green-800 mb-3">Important Dates</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between border-b border-green-100 pb-1">
+                    <span className="font-medium text-gray-700">Forwarding date:</span>
+                    <span className="text-gray-900">{result.forwarding_date || "Expected Soon"}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-green-100 pb-1">
+                    <span className="font-medium text-gray-700">Rail out date:</span>
+                    <span className="text-gray-900">{result.rail_out_date || "Expected Soon"}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-green-100 pb-1">
+                    <span className="font-medium text-gray-700">Port arrival date:</span>
+                    <span className="text-gray-900">{result.mundra_arrival_date || "Expected Soon"}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-green-100 pb-1">
+                    <span className="font-medium text-gray-700">Scroll no & date:</span>
+                    <span className="text-gray-900">{result.scroll_date || "Expected Soon"}</span>
                   </div>
                 </div>
               </div>
@@ -178,21 +213,25 @@ export default function FindJobByNumber() {
               <div className="bg-purple-50 rounded-md p-4">
                 <h3 className="text-lg font-semibold text-purple-800 mb-3">Shipping Details</h3>
                 <div className="space-y-2">
+                  <div className="flex justify-between border-b border-blue-100 pb-1">
+                    <span className="font-medium text-gray-700">Exporter Name:</span>
+                    <span className="text-gray-900">{result.exporter_name || "Expected Soon"}</span>
+                  </div>
                   <div className="flex justify-between border-b border-purple-100 pb-1">
                     <span className="font-medium text-gray-700">Port of Destination:</span>
-                    <span className="text-gray-900">{result.port_of_destination || "N/A"}</span>
+                    <span className="text-gray-900">{result.port_of_destination || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-purple-100 pb-1">
                     <span className="font-medium text-gray-700">Scheme:</span>
-                    <span className="text-gray-900">{result.scheme || "N/A"}</span>
+                    <span className="text-gray-900">{result.scheme || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-purple-100 pb-1">
                     <span className="font-medium text-gray-700">DBK DEPB:</span>
-                    <span className="text-gray-900">{result.dbk_depb || "N/A"}</span>
+                    <span className="text-gray-900">{result.dbk_depb || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-purple-100 pb-1">
                     <span className="font-medium text-gray-700">Location:</span>
-                    <span className="text-gray-900">{result.location || "N/A"}</span>
+                    <span className="text-gray-900">{result.location || "Expected Soon"}</span>
                   </div>
                 </div>
               </div>
@@ -202,33 +241,37 @@ export default function FindJobByNumber() {
                 <div className="space-y-2">
                   <div className="flex justify-between border-b border-amber-100 pb-1">
                     <span className="font-medium text-gray-700">No of Packages:</span>
-                    <span className="text-gray-900">{result.no_of_pakages || "N/A"}</span>
+                    <span className="text-gray-900">{result.no_of_pakages || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-amber-100 pb-1">
                     <span className="font-medium text-gray-700">Net Weight:</span>
-                    <span className="text-gray-900">{result.net_weight || "N/A"}</span>
+                    <span className="text-gray-900">{result.net_weight || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-amber-100 pb-1">
                     <span className="font-medium text-gray-700">Gross Weight:</span>
-                    <span className="text-gray-900">{result.gross_weight || "N/A"}</span>
+                    <span className="text-gray-900">{result.gross_weight || "Expected Soon"}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-amber-100 pb-1">
+                    <span className="font-medium text-gray-700">Current status:</span>
+                    <span className="text-gray-900">{result.current_status || "Expected Soon"}</span>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-gray-50 rounded-md p-4">
+              <div className="bg-indigo-100 rounded-md p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Additional Information</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between border-b border-gray-200 pb-1">
                     <span className="font-medium text-gray-700">EDI Job:</span>
-                    <span className="text-gray-900">{result.edi_job || "N/A"}</span>
+                    <span className="text-gray-900">{result.edi_job || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 pb-1">
                     <span className="font-medium text-gray-700">LEO Date:</span>
-                    <span className="text-gray-900">{result.leo_date || "N/A"}</span>
+                    <span className="text-gray-900">{result.leo_date || "Expected Soon"}</span>
                   </div>
                   <div className="flex justify-between border-b border-gray-200 pb-1">
                     <span className="font-medium text-gray-700">Remarks:</span>
-                    <span className="text-gray-900">{result.remarks || "N/A"}</span>
+                    <span className="text-gray-900">{result.remarks || "Expected Soon"}</span>
                   </div>
                 </div>
               </div>

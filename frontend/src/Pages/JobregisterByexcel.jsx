@@ -49,6 +49,7 @@ function JobregisterByexcel() {
     
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/jobregister/uploadjobregisterdata`, excelData);
+      // console.log(excelData);
       toast.success("Data uploaded successfully");
       setFile(null);
       setExcelData(null);
