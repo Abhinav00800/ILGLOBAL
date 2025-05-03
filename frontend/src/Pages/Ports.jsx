@@ -48,8 +48,14 @@ function Ports() {
     {
       id:7,
       name: "CFS Overseas Warehousing Pvt.Ltd",
-      location: "Ramgarh Ludhiana",
+      location: "Ramgarh Ludhiana",
       maps: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3424.2772133380645!2d75.92090259999999!3d30.878905200000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391a9d3fb9051863%3A0xc6336894b2001548!2sOverseas%20Warehousing%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1743413923854!5m2!1sen!2sin",
+    },
+    {
+      id:8,
+      name: "Punjab Logistics Infrasturcture Limited ",
+      location: "VPO-Ghungrana (near Toll Plaza),Near Ahmedgarh,Ludhiana, Punjab - 141204",
+      // maps: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3424.2772133380645!2d75.92090259999999!3d30.878905200000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391a9d3fb9051863%3A0xc6336894b2001548!2sOverseas%20Warehousing%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1743413923854!5m2!1sen!2sin",
     },
   ]
 
