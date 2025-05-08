@@ -161,7 +161,7 @@ function Home() {
                     </h2>
                     <h3 className="text-4xl font-bold text-gray-900 mb-6">Sanjeev Sharma</h3>
                     <p className="text-xl font-semibold text-blue-800 mb-2">
-                        Managing Director, IL GLOBAL SHIPPING
+                        OWNER, IL GLOBAL SHIPPING
                     </p>
                     <div className="flex flex-wrap gap-2 mb-6">
                         <span className="px-3 py-1 bg-blue-200 text-blue-700 rounded-full text-sm font-semibold">
