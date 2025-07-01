@@ -101,64 +101,102 @@ const sanitizeNumber = (val) => {
     return isNaN(num) ? null : num;
 };
 
+const BATCH_SIZE = 200;
+
+const splitIntoChunks = (array, size) => {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size));
+    }
+    return result;
+};
+
+const mapJobItem = (jobItem) => {
+    const mappedJob = {};
+
+    for (const [key, value] of Object.entries(jobItem)) {
+        if (!fieldMapping[key]) continue;
+
+        const fieldName = fieldMapping[key];
+
+        if (dateFields.includes(fieldName)) {
+            mappedJob[fieldName] = sanitizeDate(value);
+        } else if (numberFields.includes(fieldName)) {
+            mappedJob[fieldName] = sanitizeNumber(value);
+        } else {
+            mappedJob[fieldName] = value;
+        }
+    }
+
+    return mappedJob;
+};
+
 const UploadJobRegisterData = async (req, res) => {
     try {
         let jobArray = req.body;
+        if (!Array.isArray(jobArray)) jobArray = [jobArray];
 
-        if (!Array.isArray(jobArray)) {
-            jobArray = [jobArray];
-        }
+        const chunks = splitIntoChunks(jobArray, BATCH_SIZE);
+        const allResults = [];
 
-        const results = [];
+        for (const chunk of chunks) {
+            const mappedJobs = chunk.map(mapJobItem);
 
-        for (const jobItem of jobArray) {
-            const mappedJob = {};
+            const billNumbers = mappedJobs
+                .map(job => job.shipping_bill_number)
+                .filter(Boolean);
 
-            for (const [key, value] of Object.entries(jobItem)) {
-                if (!fieldMapping[key]) continue;
+            const existing = await JobRegister.find({
+                shipping_bill_number: { $in: billNumbers },
+            });
 
-                const fieldName = fieldMapping[key];
+            const existingMap = new Map();
+            existing.forEach(job =>
+                existingMap.set(job.shipping_bill_number, true)
+            );
 
-                if (dateFields.includes(fieldName)) {
-                    mappedJob[fieldName] = sanitizeDate(value);
-                } else if (numberFields.includes(fieldName)) {
-                    mappedJob[fieldName] = sanitizeNumber(value);
+            const bulkOps = [];
+            const chunkResults = [];
+
+            for (const job of mappedJobs) {
+                if (!job.shipping_bill_number) {
+                    chunkResults.push({
+                        status: "error",
+                        message: "Missing shipping_bill_number",
+                        job,
+                    });
+                    continue;
+                }
+
+                if (existingMap.has(job.shipping_bill_number)) {
+                    bulkOps.push({
+                        updateOne: {
+                            filter: { shipping_bill_number: job.shipping_bill_number },
+                            update: { $set: job },
+                            upsert: true,
+                        },
+                    });
+                    chunkResults.push({ status: "updated", job });
                 } else {
-                    mappedJob[fieldName] = value;
+                    bulkOps.push({
+                        insertOne: { document: job },
+                    });
+                    chunkResults.push({ status: "created", job });
                 }
             }
 
-            const shipping_bill_number = mappedJob["shipping_bill_number"];
-
-            if (!shipping_bill_number) {
-                results.push({
-                    status: "error",
-                    message: "Missing shipping_bill_number",
-                    job: jobItem,
-                });
-                continue;
+            if (bulkOps.length > 0) {
+                await JobRegister.bulkWrite(bulkOps);
             }
 
-            let job = await JobRegister.findOne({ shipping_bill_number });
-
-            if (job) {
-                job = await JobRegister.findOneAndUpdate(
-                    { shipping_bill_number },
-                    { $set: mappedJob },
-                    { new: true, upsert: true }
-                );
-                results.push({ status: "updated", job });
-            } else {
-                const newJob = new JobRegister(mappedJob);
-                const savedJob = await newJob.save();
-                results.push({ status: "created", job: savedJob });
-            }
+            allResults.push(...chunkResults);
         }
 
         return res.status(200).json({
-            message: "Job entries processed successfully",
-            results,
+            message: "Job entries processed successfully in batches",
+            results: allResults,
         });
+
     } catch (error) {
         console.error("UploadJobRegisterData Error:", error);
         return res.status(500).json({
