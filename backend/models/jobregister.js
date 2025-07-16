@@ -1,82 +1,78 @@
-const mongoose=require("mongoose")
+const mongoose = require("mongoose")
 
-const jobRegisterSchema= new mongoose.Schema({
-    exporter_name:{
-        type:String,
+const jobRegisterSchema = new mongoose.Schema({
+    exporter_name: {
+        type: String,
     },
-    invoice_number:{
-        type:String,
+    invoice_number: {
+        type: String,
     },
     date: {
         type: Date,
     },
-    shipping_bill_number:{
-        type:Number,
+    shipping_bill_number: {
+        type: Number,
     },
     date2: {
         type: Date,
     },
-    port_of_destination:{
-        type:String,
+    port_of_destination: {
+        type: String,
     },
-    fob_value:{
-        type:Number,
+    fob_value: {
+        type: Number,
     },
-    container_number:{
-        type:String,
+    container_number: [String],
+    size: [Number],
+    custom_seal: [String],
+    hover: [Date],
+
+    scheme: {
+        type: Number,
     },
-    size:{
-        type:Number,
+    dbk_depb: {
+        type: Number,
     },
-    custom_seal:{
-        type:String,
+    location: {
+        type: String,
     },
-    h_over:{
-        type:Date,
+    current_status: {
+        type: String,
     },
-    scheme:{
-        type:Number,
+    scroll_date: {
+        type: String,
     },
-    dbk_depb:{
-        type:Number,
+    no_of_pakages: {
+        type: Number,
     },
-    location:{
-        type:String,
+    net_weight: {
+        type: Number,
     },
-    current_status:{
-        type:String,
+    serial_number: {
+        type: Number,
     },
-    scroll_date:{
-        type:String,
+    gross_weight: {
+        type: Number,
     },
-    no_of_pakages:{
-        type:Number,
+    forwarding_date: {
+        type: Date,
     },
-    net_weight:{
-        type:Number,
+    rail_out_date: {
+        type: Date,
     },
-    gross_weight:{
-        type:Number,
+    edi_job: {
+        type: Number,
     },
-    forwarding_date:{
-        type:Date,
+    leo_date: {
+        type: Date,
     },
-    rail_out_date:{
-        type:Date,
+    mundra_arrival_date: {
+        type: Date,
     },
-    edi_job:{
-        type:Number,
-    },
-    leo_date:{
-        type:Date,
-    },
-    mundra_arrival_date:{
-        type:Date,
-    },
-    remarks:{
-        type:String,
+    remarks: {
+        type: String,
     }
 
 })
 
-module.exports= mongoose.model("JobRegister",jobRegisterSchema)
+module.exports = mongoose.model("JobRegister", jobRegisterSchema)

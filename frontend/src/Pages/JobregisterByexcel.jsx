@@ -11,23 +11,44 @@ function JobregisterByexcel() {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   
-  const handleFileSelect = (e) => {
-    const selectedFile = e.target.files[0];
-    if (!selectedFile) return;
-    
-    setFile(selectedFile);
-    
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      const bstr = evt.target.result;
-      const workbook = XLSX.read(bstr, { type: 'binary' });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
-      setExcelData(jsonData);
-    };
-    reader.readAsBinaryString(selectedFile);
+const sanitizeKey = (key) => {
+  return key
+    .toLowerCase()
+    .replace(/\s+/g, '')            // remove spaces
+    .replace(/[^\w]/g, '')          // remove non-alphanumeric characters
+    .replace(/^(.)/, (_, c) => c.toLowerCase()); // make first character lowercase
+};
+
+const renameKeys = (obj) => {
+  const newObj = {};
+  for (const key in obj) {
+    const cleanKey = sanitizeKey(key);
+    newObj[cleanKey] = obj[key];
+  }
+  return newObj;
+};
+
+const handleFileSelect = (e) => {
+  const selectedFile = e.target.files[0];
+  if (!selectedFile) return;
+
+  setFile(selectedFile);
+
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    const bstr = evt.target.result;
+    const workbook = XLSX.read(bstr, { type: 'binary' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+    const cleanedData = rawData.map(renameKeys);  // Sanitize all rows
+    setExcelData(cleanedData);
+    console.log(cleanedData);
   };
+  reader.readAsBinaryString(selectedFile);
+};
+
 
   const handleRemoveFile = () => {
     setFile(null);

@@ -14,7 +14,7 @@ export default function FindJobByNumber() {
   const location = useLocation();
 
   axios.defaults.withCredentials = true;
-  
+
   const justDate = (isoDate) => new Date(isoDate).toISOString().split("T")[0];
 
   const handleSearch = async () => {
@@ -22,18 +22,19 @@ export default function FindJobByNumber() {
       toast.warning("Please enter a Shipping Bill Number");
       return;
     }
-  
+
     setLoading(true);
     setError(null);
     setResult(null);
-  
+
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/jobregister/fetchdatabyshippingno/${query}`
       );
-  
+
       let data = response.data?.data || null;
-  
+      console.log(response.data?.data);
+
       if (data) {
         // Convert all date-like fields using justDate
         Object.keys(data).forEach((key) => {
@@ -42,9 +43,9 @@ export default function FindJobByNumber() {
           }
         });
       }
-  
+
       setResult(data);
-  
+
       if (!data) {
         toast.info("No records found for this shipping bill number");
       }
@@ -59,7 +60,7 @@ export default function FindJobByNumber() {
       setLoading(false);
     }
   };
-  
+
 
   const handlePrint = () => {
     window.print();
@@ -71,17 +72,17 @@ export default function FindJobByNumber() {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
-  
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen">
       <ToastContainer position="top-right" autoClose={3000} />
-      
+
       <div className="mb-8 bg-white rounded-lg shadow-md p-6">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-blue-800">Shipping Bill Lookup</h1>
           <p className="text-gray-600 mt-2">View detailed container and shipment information</p>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           <div className="relative flex-1">
             <input
@@ -112,7 +113,7 @@ export default function FindJobByNumber() {
             )}
           </button>
         </div>
-        
+
         {error && (
           <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-md flex items-center">
             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -122,7 +123,7 @@ export default function FindJobByNumber() {
           </div>
         )}
       </div>
-      
+
       {result && (
         <div className="bg-white rounded-lg shadow-md p-6 print:shadow-none">
           <div className="flex justify-between items-center mb-6">
@@ -131,7 +132,7 @@ export default function FindJobByNumber() {
               Shipping Details
             </h2>
             <div className="flex space-x-2">
-              <button 
+              <button
                 onClick={handlePrint}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-md flex items-center transition-colors duration-200"
               >
@@ -140,7 +141,7 @@ export default function FindJobByNumber() {
               </button>
             </div>
           </div>
-          
+
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="bg-blue-50 rounded-md p-4">
@@ -164,26 +165,67 @@ export default function FindJobByNumber() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-green-50 rounded-md p-4">
                 <h3 className="text-lg font-semibold text-green-800 mb-3">Container Details</h3>
                 <div className="space-y-2">
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">Container Number:</span>
-                    <span className="text-gray-900">{result.container_number || "Expected Soon"}</span>
+                    <select
+                      className="text-gray-900 bg-white border-none focus:ring-0 text-right"
+                      disabled
+                    >
+                      {(result.container_number || ["Expected Soon"]).map((c, i) => (
+                        <option key={i}>{c}</option>
+                      ))}
+                    </select>
                   </div>
+
+                  {/* Size */}
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">Size:</span>
-                    <span className="text-gray-900">{result.size || "Expected Soon"}</span>
+                    <div className="flex flex-wrap justify-end gap-2 max-w-[60%]">
+                      {(result.size?.length ? result.size : ["Expected Soon"]).map((item, i) => (
+                        <span
+                          key={i}
+                          className=" text-sm px-2.5 py-0.5 rounded"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
+
+                  {/* Custom Seal */}
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">Custom Seal:</span>
-                    <span className="text-gray-900">{result.custom_seal || "Expected Soon"}</span>
+                    <div className="flex flex-wrap justify-end gap-2 max-w-[60%]">
+                      {(result.custom_seal?.length ? result.custom_seal : ["Expected Soon"]).map((item, i) => (
+                        <span
+                          key={i}
+                          className=" text-sm px-2.5 py-0.5 rounded"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
+
+                  {/* H Over */}
                   <div className="flex justify-between border-b border-green-100 pb-1">
                     <span className="font-medium text-gray-700">H Over:</span>
-                    <span className="text-gray-900">{result.h_over || "Expected Soon"}</span>
+                    <div className="flex flex-wrap justify-end gap-2 max-w-[60%]">
+                      {(result.hover?.length ? result.hover : ["Expected Soon"]).map((item, i) => (
+                        <span
+                          key={i}
+                          className="text-sm  px-2.5 py-0.5 rounded"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
                   </div>
+
                 </div>
               </div>
               <div className="bg-red-50 rounded-md p-4">
@@ -208,7 +250,7 @@ export default function FindJobByNumber() {
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div className="bg-purple-50 rounded-md p-4">
                 <h3 className="text-lg font-semibold text-purple-800 mb-3">Shipping Details</h3>
@@ -235,7 +277,7 @@ export default function FindJobByNumber() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-amber-50 rounded-md p-4">
                 <h3 className="text-lg font-semibold text-amber-800 mb-3">Package Information</h3>
                 <div className="space-y-2">
@@ -257,7 +299,7 @@ export default function FindJobByNumber() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-indigo-100 rounded-md p-4">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3">Additional Information</h3>
                 <div className="space-y-2">
@@ -277,7 +319,7 @@ export default function FindJobByNumber() {
               </div>
             </div>
           </div>
-          
+
           <div className="mt-6 text-center text-sm text-gray-500 print:hidden">
             <p>This information was retrieved from the database based on the shipping bill number you provided.</p>
           </div>

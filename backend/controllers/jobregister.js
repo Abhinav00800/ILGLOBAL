@@ -34,36 +34,36 @@ const FetchJobByShippingNo = async (req, res) => {
 };
 
 const fieldMapping = {
-    "Exporter name": "exporter_name",
-    "Inv. No.": "invoice_number",
-    "Date": "date",
-    "S.Bill no.": "shipping_bill_number",
-    "PORT OF Dest.": "port_of_destination",
-    "FOB Value": "fob_value",
-    "Cont no.": "container_number",
-    "Size": "size",
-    "custom seal": "custom_seal",
-    "H/OVER": "h_over",
-    "Scheme": "scheme",
-    "DBK&DEPB AMOUNT": "dbk_depb",
-    "LOCATION": "location",
-    "Current ↵Status": "current_status",
-    "Scroll ↵no. & date": "scroll_date",
-    "No of Pkgs": "no_of_pakages",
-    "NET WT.": "net_weight",
-    "Gross weight.": "gross_weight",
-    "Forwarding date": "forwarding_date",
-    "rail out date": "rail_out_date",
-    "EDI Job": "edi_job",
-    "LEO date": "leo_date",
-    "Port arrival date ": "mundra_arrival_date",
-    "Remarks": "remarks",
-    // second "Date" column in frontend
-    "Date2": "date2"
+  cha: "cha",
+  contno: "container_number",
+  currentstatus: "current_status",
+  customseal: "custom_seal",
+  date: "date",
+  date1: "date_1",
+  dbkdepbamount: "dbk_depb",
+  edijob: "edi_job",
+  exportername: "exporter_name",
+  fobvalue: "fob_value",
+  grossweight: "gross_weight",
+  invno: "invoice_number",
+  leodate: "leo_date",
+  location: "location",
+  netwt: "net_weight",
+  noofpkgs: "no_of_packages",
+  portofdest: "port_of_destination",
+  railoutdate: "rail_out_date",
+  remarks: "remarks",
+  sbillno: "shipping_bill_number",
+  scheme: "scheme",
+  scrollnodate: "scroll_date",
+  size: "size",
+  sno: "serial_number",
+  hover: "hover"
 };
 
+
 const dateFields = [
-    "date", "date2", "h_over", "forwarding_date", "rail_out_date", "leo_date", "mundra_arrival_date"
+    "date", "date2", "hover", "forwarding_date", "rail_out_date", "leo_date", "mundra_arrival_date"
 ];
 
 const numberFields = [

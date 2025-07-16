@@ -23,7 +23,7 @@ export default function JobRegister() {
         container_number: "",
         size: "",
         custom_seal: "",
-        h_over: "",
+        hover: "",
 
         // Scheme Details
         scheme: "",
@@ -273,14 +273,14 @@ export default function JobRegister() {
                             </div>
 
                             <div className="mb-4">
-                                <label htmlFor="h_over" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="hover" className="block text-sm font-medium text-gray-700 mb-1">
                                     H/Over
                                 </label>
                                 <input
                                     type="text"
-                                    id="h_over"
-                                    name="h_over"
-                                    value={formData.h_over}
+                                    id="hover"
+                                    name="hover"
+                                    value={formData.hover}
                                     onChange={handleChange}
                                     className="w-full p-2 border border-gray-300 rounded-md"
                                 />
