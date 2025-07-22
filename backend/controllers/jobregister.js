@@ -138,10 +138,10 @@ const UploadJobRegisterData = async (req, res) => {
 
         const chunks = splitIntoChunks(jobArray, BATCH_SIZE);
         const allResults = [];
-
+        // console.log("done1");
         for (const chunk of chunks) {
             const mappedJobs = chunk.map(mapJobItem);
-
+            // console.log("done2");
             const billNumbers = mappedJobs
                 .map(job => job.shipping_bill_number)
                 .filter(Boolean);
@@ -191,14 +191,14 @@ const UploadJobRegisterData = async (req, res) => {
 
             allResults.push(...chunkResults);
         }
-
+        // console.log("done2");
         return res.status(200).json({
             message: "Job entries processed successfully in batches",
             results: allResults,
         });
 
     } catch (error) {
-        console.error("UploadJobRegisterData Error:", error);
+        console.log(error);
         return res.status(500).json({
             error: "Error processing job register data",
             details: error.message,

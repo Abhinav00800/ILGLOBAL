@@ -49,7 +49,7 @@ const jobRegisterSchema = new mongoose.Schema({
         type: Number,
     },
     serial_number: {
-        type: Number,
+        type: String,
     },
     gross_weight: {
         type: Number,
