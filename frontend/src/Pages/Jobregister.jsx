@@ -58,7 +58,7 @@ export default function JobRegister() {
     axios.defaults.withCredentials= true;
 
     useEffect(() => {
-        console.log(location.state);
+        // console.log(location.state);
     
         const fetchData = async () => {
             try {
@@ -88,7 +88,7 @@ export default function JobRegister() {
                     },
                 }
             );
-            console.log("Response:", response.data);
+            // console.log("Response:", response.data);
             toast.success("Success! Data saved.");
         } catch (error) {
             console.error("Error:", error);

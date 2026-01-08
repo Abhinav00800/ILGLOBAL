@@ -28,6 +28,80 @@ const renameKeys = (obj) => {
   return newObj;
 };
 
+// const handleFileSelect = (e) => {
+//   const selectedFile = e.target.files[0];
+//   if (!selectedFile) return;
+
+//   setFile(selectedFile);
+
+//   const reader = new FileReader();
+//   reader.onload = (evt) => {
+//     const bstr = evt.target.result;
+//     const workbook = XLSX.read(bstr, { type: 'binary' });
+//     const sheetName = workbook.SheetNames[0];
+//     const worksheet = workbook.Sheets[sheetName];
+//     const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+//     const cleanedData = rawData.map(renameKeys);  // Sanitize all rows
+//     setExcelData(cleanedData);
+//     console.log(cleanedData);
+//   };
+//   reader.readAsBinaryString(selectedFile);
+// };
+const groupDataByShippingBill = (data) => {
+  const grouped = {};
+  let currentSbillNo = null;
+
+  data.forEach(row => {
+    const sbillno = row.sbillno || currentSbillNo;
+
+    // Identify full rows with sbillno
+    if (row.sbillno) {
+      currentSbillNo = row.sbillno;
+
+      grouped[sbillno] = {
+        exporter_name: row.exportername,
+        invoice_number: row.invno,
+        date: row.date,
+        shipping_bill_number: row.sbillno,
+        date2: row.date1,
+        port_of_destination: row.portofdest,
+        fob_value: row.fobvalue,
+        container_number: [row.contno],
+        size: [row.size],
+        custom_seal: [row.customseal],
+        hover: [row.hover],
+        scheme: row.scheme,
+        dbk_depb: row.dbkdepbamount,
+        location: row.location,
+        current_status: row.currentstatus,
+        scroll_date: row.scrolldate,
+        no_of_pakages: row.noofpkgs,
+        net_weight: row.netwt,
+        serial_number: row.sbillno,
+        gross_weight: row.grossweight,
+        forwarding_date: row.forwardingdate,
+        rail_out_date: row.hower,
+        edi_job: row.edijob,
+        leo_date: row.leodate,
+        mundra_arrival_date: row.hower, // If applicable
+        remarks: row.remarks
+      };
+    } else {
+      // This row doesn't have sbillno but belongs to last one
+      if (grouped[currentSbillNo]) {
+        grouped[currentSbillNo].container_number.push(row.contno);
+        grouped[currentSbillNo].size.push(row.size);
+        grouped[currentSbillNo].custom_seal.push(row.customseal);
+        grouped[currentSbillNo].hover.push(row.hover);
+      }
+    }
+  });
+
+  return Object.values(grouped); // Return as array
+};
+
+
 const handleFileSelect = (e) => {
   const selectedFile = e.target.files[0];
   if (!selectedFile) return;
@@ -44,11 +118,12 @@ const handleFileSelect = (e) => {
 
     const cleanedData = rawData.map(renameKeys);  // Sanitize all rows
     setExcelData(cleanedData);
-    console.log(cleanedData);
+    const structuredData = groupDataByShippingBill(cleanedData);
+    setExcelData(structuredData); // Use structured data
+    console.log("Structured Data", structuredData);
   };
   reader.readAsBinaryString(selectedFile);
 };
-
 
   const handleRemoveFile = () => {
     setFile(null);
@@ -70,7 +145,7 @@ const handleFileSelect = (e) => {
     
     try {
       await axios.post(`${import.meta.env.VITE_API_URL}/jobregister/uploadjobregisterdata`, excelData);
-      // console.log(excelData);
+      console.log(excelData);
       toast.success("Data uploaded successfully");
       setFile(null);
       setExcelData(null);

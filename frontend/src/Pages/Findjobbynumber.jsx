@@ -45,7 +45,7 @@ export default function FindJobByNumber() {
       }
 
       setResult(data);
-
+      // console.log(data);
       if (!data) {
         toast.info("No records found for this shipping bill number");
       }
@@ -167,67 +167,112 @@ export default function FindJobByNumber() {
               </div>
 
               <div className="bg-green-50 rounded-md p-4">
-                <h3 className="text-lg font-semibold text-green-800 mb-3">Container Details</h3>
+                <h3 className="text-lg font-semibold text-green-800 mb-3">
+                  Container Details
+                </h3>
+
                 <div className="space-y-2">
+
+                  {/* Container Number */}
                   <div className="flex justify-between border-b border-green-100 pb-1">
-                    <span className="font-medium text-gray-700">Container Number:</span>
-                    <select
-                      className="text-gray-900 bg-white border-none focus:ring-0 text-right"
-                      disabled
-                    >
-                      {(result.container_number || ["Expected Soon"]).map((c, i) => (
-                        <option key={i}>{c}</option>
-                      ))}
-                    </select>
+                    <span className="font-medium text-gray-700">
+                      Container Number:
+                    </span>
+
+                    <div className="flex flex-wrap justify-end gap-2 max-w-[60%]">
+                      {Array.isArray(result.container_number) && result.container_number.length > 0 ? (
+                        result.container_number.map((c, i) => (
+                          <span
+                            key={i}
+                            className="text-sm px-2.5 py-0.5 rounded"
+                          >
+                            {c}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-sm px-2.5 py-0.5 rounded">
+                          Expected Soon
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Size */}
                   <div className="flex justify-between border-b border-green-100 pb-1">
-                    <span className="font-medium text-gray-700">Size:</span>
+                    <span className="font-medium text-gray-700">
+                      Size:
+                    </span>
+
                     <div className="flex flex-wrap justify-end gap-2 max-w-[60%]">
-                      {(result.size?.length ? result.size : ["Expected Soon"]).map((item, i) => (
-                        <span
-                          key={i}
-                          className=" text-sm px-2.5 py-0.5 rounded"
-                        >
-                          {item}
+                      {Array.isArray(result.size) && result.size.length > 0 ? (
+                        result.size.map((item, i) => (
+                          <span
+                            key={i}
+                            className="text-sm px-2.5 py-0.5 rounded"
+                          >
+                            {item}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-sm px-2.5 py-0.5 rounded">
+                          Expected Soon
                         </span>
-                      ))}
+                      )}
                     </div>
                   </div>
 
                   {/* Custom Seal */}
                   <div className="flex justify-between border-b border-green-100 pb-1">
-                    <span className="font-medium text-gray-700">Custom Seal:</span>
+                    <span className="font-medium text-gray-700">
+                      Custom Seal:
+                    </span>
+
                     <div className="flex flex-wrap justify-end gap-2 max-w-[60%]">
-                      {(result.custom_seal?.length ? result.custom_seal : ["Expected Soon"]).map((item, i) => (
-                        <span
-                          key={i}
-                          className=" text-sm px-2.5 py-0.5 rounded"
-                        >
-                          {item}
+                      {Array.isArray(result.custom_seal) && result.custom_seal.length > 0 ? (
+                        result.custom_seal.map((item, i) => (
+                          <span
+                            key={i}
+                            className="text-sm px-2.5 py-0.5 rounded"
+                          >
+                            {item}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-sm px-2.5 py-0.5 rounded">
+                          Expected Soon
                         </span>
-                      ))}
+                      )}
                     </div>
                   </div>
 
                   {/* H Over */}
                   <div className="flex justify-between border-b border-green-100 pb-1">
-                    <span className="font-medium text-gray-700">H Over:</span>
+                    <span className="font-medium text-gray-700">
+                      H Over:
+                    </span>
+
                     <div className="flex flex-wrap justify-end gap-2 max-w-[60%]">
-                      {(result.hover?.length ? result.hover : ["Expected Soon"]).map((item, i) => (
-                        <span
-                          key={i}
-                          className="text-sm  px-2.5 py-0.5 rounded"
-                        >
-                          {item}
+                      {Array.isArray(result.hover) && result.hover.length > 0 ? (
+                        result.hover.map((item, i) => (
+                          <span
+                            key={i}
+                            className="text-sm px-2.5 py-0.5 rounded"
+                          >
+                            {new Date(item).toLocaleDateString("en-GB")}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-sm px-2.5 py-0.5 rounded">
+                          Expected Soon
                         </span>
-                      ))}
+                      )}
                     </div>
                   </div>
 
+
                 </div>
               </div>
+
               <div className="bg-red-50 rounded-md p-4">
                 <h3 className="text-lg font-semibold text-green-800 mb-3">Important Dates</h3>
                 <div className="space-y-2">

@@ -23,7 +23,7 @@ const jobRegisterSchema = new mongoose.Schema({
         type: Number,
     },
     container_number: [String],
-    size: [Number],
+    size: [String],
     custom_seal: [String],
     hover: [Date],
 
