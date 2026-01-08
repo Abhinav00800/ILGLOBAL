@@ -310,33 +310,79 @@ const FetchJobByShippingNo = async (req, res) => {
 /* =========================
    UPLOAD (FINAL SAFE VERSION)
 ========================= */
+const BATCH_SIZE = 300;
+
+const splitIntoChunks = (arr, size) => {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+};
+
 const UploadJobRegisterData = async (req, res) => {
   try {
-    const jobArray = Array.isArray(req.body) ? req.body : [req.body];
+    let jobArray = Array.isArray(req.body) ? req.body : [req.body];
 
     if (!jobArray.length) {
       return res.status(400).json({ message: "No data received" });
     }
 
-    const bulkOps = jobArray.map((rawJob) => {
-      // 🔒 clone to avoid mutation
-      const job = normalizeDates({ ...rawJob });
+    const chunks = splitIntoChunks(jobArray, BATCH_SIZE);
+    let processedCount = 0;
 
-      return {
-        replaceOne: {
-          filter: { shipping_bill_number: job.shipping_bill_number },
-          replacement: job,
-          upsert: true,
-        },
-      };
-    });
+    for (const chunk of chunks) {
+      // Normalize + clone
+      const mappedJobs = chunk
+        .map(raw => normalizeDates({ ...raw }))
+        .filter(j => j.shipping_bill_number);
 
-    await JobRegister.bulkWrite(bulkOps);
+      if (!mappedJobs.length) continue;
+
+      // Fetch existing records in ONE query
+      const billNumbers = mappedJobs.map(
+        j => j.shipping_bill_number
+      );
+
+      const existing = await JobRegister.find(
+        { shipping_bill_number: { $in: billNumbers } },
+        { shipping_bill_number: 1 }
+      );
+
+      const existingSet = new Set(
+        existing.map(j => j.shipping_bill_number)
+      );
+
+      const bulkOps = mappedJobs.map(job => {
+        if (existingSet.has(job.shipping_bill_number)) {
+          return {
+            replaceOne: {
+              filter: { shipping_bill_number: job.shipping_bill_number },
+              replacement: job,
+              upsert: true,
+            },
+          };
+        }
+
+        return {
+          insertOne: { document: job },
+        };
+      });
+
+      if (bulkOps.length) {
+        await JobRegister.bulkWrite(bulkOps, {
+          ordered: false, // faster + fault-tolerant
+        });
+        processedCount += bulkOps.length;
+      }
+    }
 
     res.status(200).json({
       message: "Job register uploaded successfully",
-      count: jobArray.length,
+      processed: processedCount,
+      received: jobArray.length,
     });
+
   } catch (error) {
     console.error("UPLOAD ERROR:", error);
     res.status(500).json({
@@ -345,6 +391,7 @@ const UploadJobRegisterData = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   FetchJobRegisterData,
