@@ -34,25 +34,25 @@ function UsefulLinks() {
       name: "ICE Gate (new) Website",
       address: "https://www.icegate.gov.in/",
     },
-    {
-      name: "ICE Gate (old) Website",
-      address: "https://old.icegate.gov.in/index.html",
-    },
+    // {
+    //   name: "ICE Gate (old) Website",
+    //   address: "https://old.icegate.gov.in/index.html",
+    // },
     {
       name: "DGFT Website",
       address: "https://www.dgft.gov.in/CP/",
     },
     {
       name: "Custom duty calculator",
-      address: "https://old.icegate.gov.in/Webappl/",
+      address: "https://www.icegate.gov.in/Webappl/",
     },
     {
       name: "View exchange rate",
       address: "https://foservices.icegate.gov.in/#/services/viewExchangeRate",
     },
     {
-      name: "Shipping bill/ bill of entry",
-      address: "https://enquiry.icegate.gov.in/",
+      name: "Shipping bill enquiry",
+      address: "https://foservices.icegate.gov.in/#/public-enquiries/document-status/ds-shipping-bill",
     },
   ];
 
