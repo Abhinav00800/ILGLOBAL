@@ -93,7 +93,7 @@ function Home() {
                             <div className="relative">
                                 <div className="absolute -top-6 -left-6 w-full h-full bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl"></div>
                                 <img
-                                    src="https://www.savinodelbene.com/wp-content/uploads/2023/10/ocean-freight-shipping.png"
+                                    src="/IL_logo2.png"
                                     alt="Global Shipping Services"
                                     className="relative z-10 rounded-2xl shadow-2xl w-full object-cover h-96"
                                 />
@@ -161,7 +161,7 @@ function Home() {
                     </h2>
                     <h3 className="text-4xl font-bold text-gray-900 mb-6">Sanjeev Sharma</h3>
                     <p className="text-xl font-semibold text-blue-800 mb-2">
-                        OWNER, IL GLOBAL SHIPPING
+                        Custom Broker, IL GLOBAL SHIPPING
                     </p>
                     <div className="flex flex-wrap gap-2 mb-6">
                         <span className="px-3 py-1 bg-blue-200 text-blue-700 rounded-full text-sm font-semibold">
